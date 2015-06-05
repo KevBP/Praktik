@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Main extends Application {
+    private MainController mainController = new MainController();
+    private CompanyController companyController = new CompanyController();
+
     public static void main(String[] args) {
         launch(args);
     }
