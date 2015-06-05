@@ -6,21 +6,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="praktik.Controller">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints />
-    <RowConstraints maxHeight="545.0" minHeight="10.0" prefHeight="523.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="279.0" minHeight="0.0" prefHeight="37.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="1000.0" minHeight="10.0" prefHeight="523.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="37.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <ToolBar fx:id="toolbar" prefHeight="40.0" prefWidth="200.0">
         <items>
-          <Button fx:id="b_save" mnemonicParsing="false" text="Save" />
-            <Button fx:id="b_load" mnemonicParsing="false" text="Load" />
-            <Button fx:id="b_about" mnemonicParsing="false" text="About" />
+          <Button fx:id="b_save" mnemonicParsing="false" onAction="#action_save" text="Save" />
+            <Button fx:id="b_load" mnemonicParsing="false" onAction="#action_load" text="Load" />
+            <Button fx:id="b_about" mnemonicParsing="false" onAction="#action_about" text="About" />
         </items>
       </ToolBar>
       <TableView fx:id="table" prefHeight="263.0" prefWidth="597.0" GridPane.rowIndex="1">
@@ -42,11 +42,11 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="b_add" mnemonicParsing="false" text="Add" GridPane.halignment="RIGHT">
+            <Button fx:id="b_add" mnemonicParsing="false" onAction="#action_add" text="Add" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Button>
-            <Button fx:id="b_delete" disable="true" mnemonicParsing="false" text="Delete" GridPane.columnIndex="1">
+            <Button fx:id="b_delete" disable="true" mnemonicParsing="false" onAction="#action_delete" text="Delete" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
