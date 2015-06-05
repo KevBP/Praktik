@@ -68,6 +68,11 @@
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>
             </TextField>
+            <TextArea fx:id="tf_mail" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <GridPane.margin>
+                    <Insets left="10.0" right="10.0" />
+             </GridPane.margin>
+             </TextArea>
             <TextField fx:id="tf_website" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
@@ -91,11 +96,6 @@
                     <String fx:value="Uncontacted" />
                 </value>
             </ComboBox>
-            <TextArea fx:id="tf_mail" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets left="10.0" right="10.0" />
-               </GridPane.margin>
-            </TextArea>
          </children>
       </GridPane>
       <GridPane>

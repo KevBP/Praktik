@@ -1,6 +1,7 @@
 package praktik;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -37,15 +38,18 @@ public class MainController {
 
     public void action_add(ActionEvent actionEvent) throws IOException {
         // Open a window with a form to enter a new company
-        Parent root = FXMLLoader.load(getClass().getResource("form_add.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("form_add.fxml"));
+        Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("Add a company");
         stage.setScene(new Scene(root, 600, 330));
         stage.show();
 
         // Add the new company to the table's data
-        //data.add(new Company("Test", "Fait pleins de tests", "0666666666", "contact@test.tt", "test.tt", "non contacté"));
-        tc_company.setCellValueFactory(new PropertyValueFactory<Company,String>("companyName"));
+        CompanyController controller = loader.getController();
+        controller.getData().addListener((ListChangeListener<Company>) c -> data.addAll(c.getList()));
+
+        tc_company.setCellValueFactory(new PropertyValueFactory<Company, String>("companyName"));
         tc_activities.setCellValueFactory(new PropertyValueFactory<Company,String>("activities"));
         tc_phone.setCellValueFactory(new PropertyValueFactory<Company,String>("phone"));
         tc_mail.setCellValueFactory(new PropertyValueFactory<Company,String>("mail"));
