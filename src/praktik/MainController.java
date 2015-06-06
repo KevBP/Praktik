@@ -1,5 +1,7 @@
 package praktik;
 
+import com.google.gson.Gson;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -11,9 +13,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.io.*;
 
 public class MainController {
     public TableView table;
@@ -27,10 +30,43 @@ public class MainController {
     public Button b_delete;
     private ObservableList<Company> data = FXCollections.observableArrayList();
 
-    public void action_save(ActionEvent actionEvent) {
+    public void action_save_as(ActionEvent actionEvent) {
+        // serialize the content of the TableView
+        String json = "";
+        Gson gson = new Gson();
+        for(Company company : (ObservableList<Company>) table.getItems()) {
+            json += gson.toJson(company);
+        }
+
+        if(json != "") {
+            // Select the path to save the file
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save File");
+            Stage stage = new Stage();
+            File file = fileChooser.showSaveDialog(stage);
+
+            if (file != null) {
+                // create and write the json in the file selected
+                try {
+                    file.createNewFile();
+                    PrintWriter out = new PrintWriter(file);
+                    out.print(json);
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void action_load(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load File");
+        Stage stage = new Stage();
+        File file = fileChooser.showOpenDialog(stage);
+        if(file != null) {
+            System.out.println(file.getAbsolutePath());
+        }
     }
 
     public void action_about(ActionEvent actionEvent) {

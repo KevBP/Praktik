@@ -18,7 +18,7 @@
    <children>
       <ToolBar fx:id="toolbar" prefHeight="40.0" prefWidth="200.0">
         <items>
-          <Button fx:id="b_save" mnemonicParsing="false" onAction="#action_save" text="Save" />
+          <Button fx:id="b_save_as" mnemonicParsing="false" onAction="#action_save_as" text="Save as..." />
             <Button fx:id="b_load" mnemonicParsing="false" onAction="#action_load" text="Load" />
             <Button fx:id="b_about" mnemonicParsing="false" onAction="#action_about" text="About" />
         </items>
