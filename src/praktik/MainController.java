@@ -61,6 +61,8 @@ public class MainController {
     }
 
     public void action_delete(ActionEvent actionEvent) {
+        data.remove(table.getSelectionModel().getSelectedItem());
+        table.setItems(data);
         if(data.size() == 0) {
             b_delete.setDisable(true);
         }

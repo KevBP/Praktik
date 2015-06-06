@@ -90,4 +90,9 @@ public class Company {
     public void setState(String state) {
         this.state.set(state);
     }
+
+    @Override
+    public String toString() {
+        return companyName.get();
+    }
 }
