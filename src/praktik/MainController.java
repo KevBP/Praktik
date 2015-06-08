@@ -1,9 +1,5 @@
 package praktik;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -19,8 +15,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 public class MainController {
     public TableView<Company> table;
@@ -44,11 +38,20 @@ public class MainController {
 
             if (file != null) {
                 // create and write the json in the file selected
+                FileOutputStream fos = null;
                 try {
                     file.createNewFile();
-                    PrintWriter out = new PrintWriter(file);
-                    data.stream().forEach(company -> out.println(company));
-                    out.close();
+                    fos = new FileOutputStream(file);
+                    final ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    data.stream().forEach(company -> {
+                        try {
+                            oos.writeObject(company);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    oos.close();
+                    fos.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -61,8 +64,31 @@ public class MainController {
         fileChooser.setTitle("Load File");
         Stage stage = new Stage();
         File file = fileChooser.showOpenDialog(stage);
-        if(file != null) {
-            System.out.println("prout");
+        if (file != null) {
+            data.clear();
+            FileInputStream fis = null;
+            ObjectInputStream ois = null;
+            try {
+                fis = new FileInputStream(file);
+                ois = new ObjectInputStream(fis);
+                while(fis.available() > 0) {
+                    data.add((Company) ois.readObject());
+                }
+                tc_company.setCellValueFactory(new PropertyValueFactory<Company,String>("companyName"));
+                tc_activities.setCellValueFactory(new PropertyValueFactory<Company,String>("activities"));
+                tc_phone.setCellValueFactory(new PropertyValueFactory<Company,String>("phone"));
+                tc_mail.setCellValueFactory(new PropertyValueFactory<Company,String>("mail"));
+                tc_website.setCellValueFactory(new PropertyValueFactory<Company,String>("website"));
+                tc_state.setCellValueFactory(new PropertyValueFactory<Company,String>("state"));
+                table.setItems(data);
+                if(data.size() > 0) {
+                    b_delete.setDisable(false);
+                }
+                ois.close();
+                fis.close();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
