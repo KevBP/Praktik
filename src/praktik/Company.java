@@ -2,21 +2,26 @@ package praktik;
 
 import javafx.beans.property.SimpleStringProperty;
 
-public class Company {
-    private final SimpleStringProperty companyName;
-    private final SimpleStringProperty activities;
-    private final SimpleStringProperty phone;
-    private final SimpleStringProperty mail;
-    private final SimpleStringProperty website;
-    private final SimpleStringProperty state;
+import java.io.*;
+
+public class Company implements Externalizable {
+    private final SimpleStringProperty companyName = new SimpleStringProperty();
+    private final SimpleStringProperty activities = new SimpleStringProperty();
+    private final SimpleStringProperty phone = new SimpleStringProperty();
+    private final SimpleStringProperty mail = new SimpleStringProperty();
+    private final SimpleStringProperty website = new SimpleStringProperty();
+    private final SimpleStringProperty state = new SimpleStringProperty();
+
+    public Company() {
+    }
 
     public Company(String companyName, String activities, String phone, String mail, String website, String state) {
-        this.companyName = new SimpleStringProperty(companyName);
-        this.activities = new SimpleStringProperty(activities);
-        this.phone = new SimpleStringProperty(phone);
-        this.mail = new SimpleStringProperty(mail);
-        this.website = new SimpleStringProperty(website);
-        this.state = new SimpleStringProperty(state);
+        this.companyName.set(companyName);
+        this.activities.set(activities);
+        this.phone.set(phone);
+        this.mail.set(mail);
+        this.website.set(website);
+        this.state.set(state);
     }
 
     public String getCompanyName() {
@@ -93,6 +98,33 @@ public class Company {
 
     @Override
     public String toString() {
-        return companyName.get();
+        return "Company{" +
+                "companyName=" + companyName.get() +
+                ", activities=" + activities.get() +
+                ", phone=" + phone.get() +
+                ", mail=" + mail.get() +
+                ", website=" + website.get() +
+                ", state=" + state.get() +
+                '}';
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(getCompanyName());
+        out.writeObject(getActivities());
+        out.writeObject(getPhone());
+        out.writeObject(getMail());
+        out.writeObject(getWebsite());
+        out.writeObject(getState());
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        setCompanyName((String)in.readObject());
+        setActivities((String)in.readObject());
+        setPhone((String)in.readObject());
+        setMail((String)in.readObject());
+        setWebsite((String)in.readObject());
+        setState((String)in.readObject());
     }
 }

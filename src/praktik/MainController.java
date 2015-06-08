@@ -1,6 +1,8 @@
 package praktik;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -17,28 +19,23 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class MainController {
-    public TableView table;
-    public TableColumn tc_company;
-    public TableColumn tc_activities;
-    public TableColumn tc_phone;
-    public TableColumn tc_mail;
-    public TableColumn tc_website;
-    public TableColumn tc_state;
+    public TableView<Company> table;
+    public TableColumn<Company, String> tc_company;
+    public TableColumn<Company, String> tc_activities;
+    public TableColumn<Company, String> tc_phone;
+    public TableColumn<Company, String> tc_mail;
+    public TableColumn<Company, String> tc_website;
+    public TableColumn<Company, String> tc_state;
     public Button b_add;
     public Button b_delete;
     private ObservableList<Company> data = FXCollections.observableArrayList();
 
     public void action_save_as(ActionEvent actionEvent) {
-        // serialize the content of the TableView
-        String json = "";
-        Gson gson = new Gson();
-        for(Company company : (ObservableList<Company>) table.getItems()) {
-            json += gson.toJson(company);
-        }
-
-        if(json != "") {
+        if(!data.isEmpty()) {
             // Select the path to save the file
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save File");
@@ -50,7 +47,7 @@ public class MainController {
                 try {
                     file.createNewFile();
                     PrintWriter out = new PrintWriter(file);
-                    out.print(json);
+                    data.stream().forEach(company -> out.println(company));
                     out.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -65,7 +62,7 @@ public class MainController {
         Stage stage = new Stage();
         File file = fileChooser.showOpenDialog(stage);
         if(file != null) {
-            System.out.println(file.getAbsolutePath());
+            System.out.println("prout");
         }
     }
 
@@ -83,23 +80,27 @@ public class MainController {
 
         // Add the new company to the table's data
         CompanyController controller = loader.getController();
-        controller.getData().addListener((ListChangeListener<Company>) c -> data.addAll(c.getList()));
+        controller.getData().addListener(new ListChangeListener<Company>() {
+            @Override
+            public void onChanged(Change<? extends Company> c) {
+                data.addAll(c.getList());
+                b_delete.setDisable(false);
+            }
+        });
 
-        tc_company.setCellValueFactory(new PropertyValueFactory<Company, String>("companyName"));
+        tc_company.setCellValueFactory(new PropertyValueFactory<Company,String>("companyName"));
         tc_activities.setCellValueFactory(new PropertyValueFactory<Company,String>("activities"));
         tc_phone.setCellValueFactory(new PropertyValueFactory<Company,String>("phone"));
         tc_mail.setCellValueFactory(new PropertyValueFactory<Company,String>("mail"));
         tc_website.setCellValueFactory(new PropertyValueFactory<Company,String>("website"));
         tc_state.setCellValueFactory(new PropertyValueFactory<Company,String>("state"));
         table.setItems(data);
-
-        b_delete.setDisable(false);
     }
 
     public void action_delete(ActionEvent actionEvent) {
         data.remove(table.getSelectionModel().getSelectedItem());
         table.setItems(data);
-        if(data.size() == 0) {
+        if(data.isEmpty()) {
             b_delete.setDisable(true);
         }
     }
