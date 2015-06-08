@@ -26,7 +26,9 @@ public class MainController {
     public TableColumn<Company, String> tc_state;
     public Button b_add;
     public Button b_delete;
+    public Button b_save;
     private ObservableList<Company> data = FXCollections.observableArrayList();
+    private File fileOpen = null;
 
     public void action_save_as(ActionEvent actionEvent) {
         if(!data.isEmpty()) {
@@ -52,6 +54,9 @@ public class MainController {
                     });
                     oos.close();
                     fos.close();
+
+                    fileOpen = file;
+                    b_save.setDisable(false);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -60,7 +65,23 @@ public class MainController {
     }
 
     public void action_save(ActionEvent actionEvent) {
-        // TODO
+        FileOutputStream fos = null;
+        try {
+            fileOpen.createNewFile();
+            fos = new FileOutputStream(fileOpen);
+            final ObjectOutputStream oos = new ObjectOutputStream(fos);
+            data.stream().forEach(company -> {
+                try {
+                    oos.writeObject(company);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            oos.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void action_load(ActionEvent actionEvent) {
@@ -90,6 +111,9 @@ public class MainController {
                 }
                 ois.close();
                 fis.close();
+
+                fileOpen = file;
+                b_save.setDisable(false);
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
