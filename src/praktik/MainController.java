@@ -59,6 +59,10 @@ public class MainController {
         }
     }
 
+    public void action_save(ActionEvent actionEvent) {
+        // TODO
+    }
+
     public void action_load(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load File");
@@ -93,6 +97,7 @@ public class MainController {
     }
 
     public void action_about(ActionEvent actionEvent) {
+        // TODO
     }
 
     public void action_add(ActionEvent actionEvent) throws IOException {
