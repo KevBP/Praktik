@@ -1,11 +1,11 @@
 package praktik;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,8 +16,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class MainController {
+public class MainController implements Initializable {
     @FXML private TableView<Company> table;
     @FXML private TableColumn<Company, String> tc_company;
     @FXML private TableColumn<Company, String> tc_activities;
@@ -29,11 +31,11 @@ public class MainController {
     @FXML private Button b_delete;
     @FXML private Button b_save;
 
-    private ObservableList<Company> data = FXCollections.observableArrayList();
     private File fileOpen = null;
 
     @FXML
     protected void action_save_as(ActionEvent actionEvent) {
+        ObservableList<Company> data = table.getItems();
         if(!data.isEmpty()) {
             // Select the path to save the file
             FileChooser fileChooser = new FileChooser();
@@ -74,6 +76,7 @@ public class MainController {
             fileOpen.createNewFile();
             fos = new FileOutputStream(fileOpen);
             final ObjectOutputStream oos = new ObjectOutputStream(fos);
+            ObservableList<Company> data = table.getItems();
             data.stream().forEach(company -> {
                 try {
                     oos.writeObject(company);
@@ -95,6 +98,7 @@ public class MainController {
         Stage stage = new Stage();
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
+            ObservableList<Company> data = table.getItems();
             data.clear();
             FileInputStream fis = null;
             ObjectInputStream ois = null;
@@ -104,12 +108,6 @@ public class MainController {
                 while(fis.available() > 0) {
                     data.add((Company) ois.readObject());
                 }
-                tc_company.setCellValueFactory(new PropertyValueFactory<Company,String>("companyName"));
-                tc_activities.setCellValueFactory(new PropertyValueFactory<Company,String>("activities"));
-                tc_phone.setCellValueFactory(new PropertyValueFactory<Company,String>("phone"));
-                tc_mail.setCellValueFactory(new PropertyValueFactory<Company,String>("mail"));
-                tc_website.setCellValueFactory(new PropertyValueFactory<Company,String>("website"));
-                tc_state.setCellValueFactory(new PropertyValueFactory<Company, String>("state"));
                 table.setItems(data);
                 if(data.size() > 0) {
                     b_delete.setDisable(false);
@@ -145,26 +143,30 @@ public class MainController {
         controller.getData().addListener(new ListChangeListener<Company>() {
             @Override
             public void onChanged(Change<? extends Company> c) {
+                ObservableList<Company> data = table.getItems();
                 data.addAll(c.getList());
                 b_delete.setDisable(false);
             }
         });
+    }
 
+    @FXML
+    protected void action_delete(ActionEvent actionEvent) {
+        ObservableList<Company> data = table.getItems();
+        data.remove(table.getSelectionModel().getSelectedItem());
+        table.setItems(data);
+        if(data.isEmpty()) {
+            b_delete.setDisable(true);
+        }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         tc_company.setCellValueFactory(new PropertyValueFactory<Company,String>("companyName"));
         tc_activities.setCellValueFactory(new PropertyValueFactory<Company,String>("activities"));
         tc_phone.setCellValueFactory(new PropertyValueFactory<Company,String>("phone"));
         tc_mail.setCellValueFactory(new PropertyValueFactory<Company,String>("mail"));
         tc_website.setCellValueFactory(new PropertyValueFactory<Company,String>("website"));
         tc_state.setCellValueFactory(new PropertyValueFactory<Company, String>("state"));
-        table.setItems(data);
-    }
-
-    @FXML
-    protected void action_delete(ActionEvent actionEvent) {
-        data.remove(table.getSelectionModel().getSelectedItem());
-        table.setItems(data);
-        if(data.isEmpty()) {
-            b_delete.setDisable(true);
-        }
     }
 }
