@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,20 +18,22 @@ import javafx.stage.Stage;
 import java.io.*;
 
 public class MainController {
-    public TableView<Company> table;
-    public TableColumn<Company, String> tc_company;
-    public TableColumn<Company, String> tc_activities;
-    public TableColumn<Company, String> tc_phone;
-    public TableColumn<Company, String> tc_mail;
-    public TableColumn<Company, String> tc_website;
-    public TableColumn<Company, String> tc_state;
-    public Button b_add;
-    public Button b_delete;
-    public Button b_save;
+    @FXML private TableView<Company> table;
+    @FXML private TableColumn<Company, String> tc_company;
+    @FXML private TableColumn<Company, String> tc_activities;
+    @FXML private TableColumn<Company, String> tc_phone;
+    @FXML private TableColumn<Company, String> tc_mail;
+    @FXML private TableColumn<Company, String> tc_website;
+    @FXML private TableColumn<Company, String> tc_state;
+    @FXML private Button b_add;
+    @FXML private Button b_delete;
+    @FXML private Button b_save;
+
     private ObservableList<Company> data = FXCollections.observableArrayList();
     private File fileOpen = null;
 
-    public void action_save_as(ActionEvent actionEvent) {
+    @FXML
+    protected void action_save_as(ActionEvent actionEvent) {
         if(!data.isEmpty()) {
             // Select the path to save the file
             FileChooser fileChooser = new FileChooser();
@@ -64,7 +67,8 @@ public class MainController {
         }
     }
 
-    public void action_save(ActionEvent actionEvent) {
+    @FXML
+    protected void action_save(ActionEvent actionEvent) {
         FileOutputStream fos = null;
         try {
             fileOpen.createNewFile();
@@ -84,7 +88,8 @@ public class MainController {
         }
     }
 
-    public void action_load(ActionEvent actionEvent) {
+    @FXML
+    protected void action_load(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load File");
         Stage stage = new Stage();
@@ -104,7 +109,7 @@ public class MainController {
                 tc_phone.setCellValueFactory(new PropertyValueFactory<Company,String>("phone"));
                 tc_mail.setCellValueFactory(new PropertyValueFactory<Company,String>("mail"));
                 tc_website.setCellValueFactory(new PropertyValueFactory<Company,String>("website"));
-                tc_state.setCellValueFactory(new PropertyValueFactory<Company,String>("state"));
+                tc_state.setCellValueFactory(new PropertyValueFactory<Company, String>("state"));
                 table.setItems(data);
                 if(data.size() > 0) {
                     b_delete.setDisable(false);
@@ -120,11 +125,13 @@ public class MainController {
         }
     }
 
-    public void action_about(ActionEvent actionEvent) {
+    @FXML
+    protected void action_about(ActionEvent actionEvent) {
         // TODO
     }
 
-    public void action_add(ActionEvent actionEvent) throws IOException {
+    @FXML
+    protected void action_add(ActionEvent actionEvent) throws IOException {
         // Open a window with a form to enter a new company
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_add.fxml"));
         Parent root = loader.load();
@@ -148,11 +155,12 @@ public class MainController {
         tc_phone.setCellValueFactory(new PropertyValueFactory<Company,String>("phone"));
         tc_mail.setCellValueFactory(new PropertyValueFactory<Company,String>("mail"));
         tc_website.setCellValueFactory(new PropertyValueFactory<Company,String>("website"));
-        tc_state.setCellValueFactory(new PropertyValueFactory<Company,String>("state"));
+        tc_state.setCellValueFactory(new PropertyValueFactory<Company, String>("state"));
         table.setItems(data);
     }
 
-    public void action_delete(ActionEvent actionEvent) {
+    @FXML
+    protected void action_delete(ActionEvent actionEvent) {
         data.remove(table.getSelectionModel().getSelectedItem());
         table.setItems(data);
         if(data.isEmpty()) {

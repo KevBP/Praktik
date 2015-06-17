@@ -13,6 +13,7 @@ public class Company implements Externalizable {
     private final SimpleStringProperty state = new SimpleStringProperty();
 
     public Company() {
+        this("", "", "", "", "", "");
     }
 
     public Company(String companyName, String activities, String phone, String mail, String website, String state) {
