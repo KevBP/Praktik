@@ -20,6 +20,11 @@
                 <Button fx:id="b_save" disable="true" mnemonicParsing="false" onAction="#action_save" text="Save" />
                 <Button fx:id="b_load" mnemonicParsing="false" onAction="#action_load" text="Load" />
                 <Button fx:id="b_about" mnemonicParsing="false" onAction="#action_about" text="About" />
+            <Label fx:id="l_file">
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
             </items>
         </ToolBar>
         <TableView fx:id="table" editable="true" prefHeight="263.0" prefWidth="597.0" GridPane.rowIndex="1">

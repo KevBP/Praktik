@@ -33,6 +33,7 @@ public class MainController implements Initializable {
     @FXML private Button b_add;
     @FXML private Button b_delete;
     @FXML private Button b_save;
+    @FXML private Label l_file;
 
     private Stage formStage;
     private CompanyController formController;
@@ -67,6 +68,7 @@ public class MainController implements Initializable {
                     fos.close();
 
                     fileOpen = file;
+                    l_file.setText(fileOpen.getCanonicalPath());
                     b_save.setDisable(false);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -122,6 +124,7 @@ public class MainController implements Initializable {
                 fis.close();
 
                 fileOpen = file;
+                l_file.setText(fileOpen.getCanonicalPath());
                 b_save.setDisable(false);
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
