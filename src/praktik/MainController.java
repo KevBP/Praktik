@@ -1,19 +1,22 @@
 package praktik;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.converter.DefaultStringConverter;
 
 import java.io.*;
 import java.net.URL;
@@ -31,7 +34,10 @@ public class MainController implements Initializable {
     @FXML private Button b_delete;
     @FXML private Button b_save;
 
+    private Stage formStage;
+    private CompanyController formController;
     private File fileOpen = null;
+    private ObservableList<String> stateValues = FXCollections.observableArrayList("Uncontacted", "Contacted", "First reminder", "Second reminder", "Positive response", "Negative response");
 
     @FXML
     protected void action_save_as(ActionEvent actionEvent) {
@@ -130,24 +136,8 @@ public class MainController implements Initializable {
 
     @FXML
     protected void action_add(ActionEvent actionEvent) throws IOException {
-        // Open a window with a form to enter a new company
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("form_add.fxml"));
-        Parent root = loader.load();
-        Stage stage = new Stage();
-        stage.setTitle("Add a company");
-        stage.setScene(new Scene(root, 600, 330));
-        stage.show();
-
-        // Add the new company to the table's data
-        CompanyController controller = loader.getController();
-        controller.getData().addListener(new ListChangeListener<Company>() {
-            @Override
-            public void onChanged(Change<? extends Company> c) {
-                ObservableList<Company> data = table.getItems();
-                data.addAll(c.getList());
-                b_delete.setDisable(false);
-            }
-        });
+        formController.clean();
+        formStage.show();
     }
 
     @FXML
@@ -162,11 +152,81 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        table.setTableMenuButtonVisible(true);
+
         tc_company.setCellValueFactory(new PropertyValueFactory<Company,String>("companyName"));
         tc_activities.setCellValueFactory(new PropertyValueFactory<Company,String>("activities"));
         tc_phone.setCellValueFactory(new PropertyValueFactory<Company,String>("phone"));
         tc_mail.setCellValueFactory(new PropertyValueFactory<Company,String>("mail"));
         tc_website.setCellValueFactory(new PropertyValueFactory<Company,String>("website"));
         tc_state.setCellValueFactory(new PropertyValueFactory<Company, String>("state"));
+
+        // Setting cells
+        tc_company.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc_company.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setCompanyName(t.getNewValue());
+            }
+        });
+        tc_activities.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc_activities.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setActivities(t.getNewValue());
+            }
+        });
+        tc_phone.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc_phone.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setPhone(t.getNewValue());
+            }
+        });
+        tc_mail.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc_mail.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setMail(t.getNewValue());
+            }
+        });
+        tc_website.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc_website.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setWebsite(t.getNewValue());
+            }
+        });
+        tc_state.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), stateValues));
+        tc_state.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setState(t.getNewValue());
+            }
+        });
+
+        // Open a window with a form to enter a new company
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("form_add.fxml"));
+        try
+
+        {
+            Parent root = loader.load();
+            formStage = new Stage();
+            formStage.setTitle("Add a company");
+            formStage.setScene(new Scene(root, 600, 330));
+        } catch (
+                IOException e
+                )
+
+        {
+            e.printStackTrace();
+        }
+
+        // Add a listener to add new companies to the table's data
+        formController = loader.getController();
+        formController.getData().
+
+        addListener(new ListChangeListener<Company>() {
+            @Override
+            public void onChanged(Change<? extends Company> c) {
+                ObservableList<Company> data = table.getItems();
+                data.addAll(c.getList());
+                b_delete.setDisable(false);
+            }
+        });
     }
 }
