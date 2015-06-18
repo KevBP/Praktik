@@ -21,6 +21,8 @@ import javafx.util.converter.DefaultStringConverter;
 import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainController implements Initializable {
     @FXML private TableView<Company> table;
@@ -39,6 +41,7 @@ public class MainController implements Initializable {
     private CompanyController formController;
     private File fileOpen = null;
     private ObservableList<String> stateValues = FXCollections.observableArrayList("Uncontacted", "Contacted", "First reminder", "Second reminder", "Positive response", "Negative response");
+    private Timer timer = new Timer();
 
     @FXML
     protected void action_save_as(ActionEvent actionEvent) {
@@ -68,7 +71,7 @@ public class MainController implements Initializable {
                     fos.close();
 
                     fileOpen = file;
-                    l_file.setText(fileOpen.getCanonicalPath());
+                    l_file.setText(fileOpen.getName());
                     b_save.setDisable(false);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -124,7 +127,7 @@ public class MainController implements Initializable {
                 fis.close();
 
                 fileOpen = file;
-                l_file.setText(fileOpen.getCanonicalPath());
+                l_file.setText(fileOpen.getName());
                 b_save.setDisable(false);
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -204,18 +207,13 @@ public class MainController implements Initializable {
 
         // Open a window with a form to enter a new company
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_add.fxml"));
-        try
-
-        {
+        try {
             Parent root = loader.load();
             formStage = new Stage();
             formStage.setTitle("Add a company");
             formStage.setScene(new Scene(root, 600, 330));
-        } catch (
-                IOException e
-                )
-
-        {
+        }
+        catch(IOException e) {
             e.printStackTrace();
         }
 
@@ -231,5 +229,18 @@ public class MainController implements Initializable {
                 b_delete.setDisable(false);
             }
         });
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if(fileOpen != null) {
+                    action_save(null);
+                }
+            }
+        }, 60000, 60000);
+    }
+
+    public void terminate () {
+        timer.cancel();
     }
 }
