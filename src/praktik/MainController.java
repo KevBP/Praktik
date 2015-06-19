@@ -39,6 +39,7 @@ public class MainController implements Initializable {
 
     private Stage formStage;
     private CompanyController formController;
+    private Stage about;
     private File fileOpen = null;
     private ObservableList<String> stateValues = FXCollections.observableArrayList("Uncontacted", "Contacted", "First reminder", "Second reminder", "Positive response", "Negative response");
     private Timer timer = new Timer();
@@ -137,7 +138,7 @@ public class MainController implements Initializable {
 
     @FXML
     protected void action_about(ActionEvent actionEvent) {
-        // TODO
+        about.show();
     }
 
     @FXML
@@ -217,6 +218,18 @@ public class MainController implements Initializable {
             e.printStackTrace();
         }
 
+        // About
+        FXMLLoader loader2 = new FXMLLoader(getClass().getResource("about.fxml"));
+        try {
+            Parent root = loader2.load();
+            about = new Stage();
+            about.setTitle("About Praktik");
+            about.setScene(new Scene(root, 400, 350));
+            //about.show();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
         // Add a listener to add new companies to the table's data
         formController = loader.getController();
         formController.getData().
