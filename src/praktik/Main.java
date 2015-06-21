@@ -3,6 +3,7 @@ package praktik;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -20,6 +21,7 @@ public class Main extends Application {
         loader = new FXMLLoader(getClass().getResource("main.fxml"));
         GridPane root = loader.load();
         Scene scene = new Scene(root);
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("resources/icon.png")));
         primaryStage.setTitle("Praktik - Manage your search for job");
         primaryStage.setScene(scene);
         primaryStage.show();
