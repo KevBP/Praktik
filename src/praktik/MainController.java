@@ -1,5 +1,7 @@
 package praktik;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -11,15 +13,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.converter.DefaultStringConverter;
+import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -139,6 +141,7 @@ public class MainController implements Initializable {
     @FXML
     protected void action_about(ActionEvent actionEvent) {
         about.show();
+        table.getChildrenUnmodifiable().stream().forEach(node -> node.getStyleClass().clear());
     }
 
     @FXML
@@ -152,6 +155,7 @@ public class MainController implements Initializable {
         ObservableList<Company> data = table.getItems();
         data.remove(table.getSelectionModel().getSelectedItem());
         table.setItems(data);
+
         if(data.isEmpty()) {
             b_delete.setDisable(true);
         }
@@ -199,12 +203,84 @@ public class MainController implements Initializable {
                 ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setWebsite(t.getNewValue());
             }
         });
-        tc_state.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), stateValues));
-        tc_state.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
-            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
-                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setState(t.getNewValue());
+        //tc_state.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), stateValues));
+        tc_state.setCellFactory(new Callback<TableColumn<Company, String>, TableCell<Company, String>>() {
+            @Override
+            public TableCell<Company, String> call(TableColumn<Company, String> param) {
+                return new TableCell<Company, String>(){
+                    private ComboBox comboBox;
+
+                    @Override
+                    public void startEdit() {
+                        if (!isEmpty()) {
+                            super.startEdit();
+
+                            setText(null);
+                            createComboBox();
+                            comboBox.setValue(getItem());
+                            setGraphic(comboBox);
+                        }
+                    }
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        this.getTableRow().getStyleClass().removeAll("uncontacted", "positive", "negative");
+
+                        if (empty) {
+                            setText(null);
+                            setGraphic(null);
+                        }
+                        else {
+                            if (isEditing()) {
+                                setText(null);
+                                setGraphic(comboBox);
+                            }
+                            else {
+                                setText(item);
+                                setGraphic(null);
+                                switch (item) {
+                                    case "Uncontacted":
+                                        this.getTableRow().getStyleClass().add("uncontacted");
+                                        break;
+                                    case "Positive response":
+                                        this.getTableRow().getStyleClass().add("positive");
+                                        break;
+                                    case "Negative response":
+                                        this.getTableRow().getStyleClass().add("negative");
+                                        break;
+                                    default:
+                                        //this.getTableRow().getStyleClass().removeAll("uncontacted", "positive", "negative");
+                                        break;
+                                }
+                            }
+                        }
+                    }
+
+                    private void createComboBox() {
+                        comboBox = new ComboBox(stateValues);
+                        comboBox.setValue(getItem());
+                        comboBox.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                            @Override
+                            public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+                                if (!arg2) {
+                                    commitEdit(comboBox.getValue().toString());
+                                }
+                            }
+                        });
+                    }
+                };
             }
         });
+        tc_state.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setState(t.getNewValue());
+            }
+
+        });
+
 
         // Open a window with a form to enter a new company
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_add.fxml"));

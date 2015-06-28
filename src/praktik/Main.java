@@ -21,6 +21,7 @@ public class Main extends Application {
         loader = new FXMLLoader(getClass().getResource("main.fxml"));
         GridPane root = loader.load();
         Scene scene = new Scene(root);
+        scene.getStylesheets().add("/praktik/style.css");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("resources/icon.png")));
         primaryStage.setTitle("Praktik - Manage your search for job");
         primaryStage.setScene(scene);
