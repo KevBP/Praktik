@@ -1,0 +1,11 @@
+.uncontacted {
+    -fx-background-color: rgba(0, 0, 0, 0.30);
+}
+
+.positive {
+    -fx-background-color: rgba(0, 255, 0, 0.30);
+}
+
+.negative {
+    -fx-background-color: rgba(255, 0, 0, 0.30);
+}
