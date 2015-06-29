@@ -1,7 +1,5 @@
 package praktik;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -15,13 +13,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -216,10 +215,20 @@ public class MainController implements Initializable {
                             super.startEdit();
 
                             setText(null);
-                            createComboBox();
-                            comboBox.setValue(getItem());
+                            if(comboBox == null) {
+                                createComboBox();
+                            }
                             setGraphic(comboBox);
+                            setText(null);
                         }
+                    }
+
+                    @Override
+                    public void cancelEdit() {
+                        super.cancelEdit();
+
+                        setText(getItem());
+                        setGraphic(null);
                     }
 
                     @Override
@@ -229,11 +238,12 @@ public class MainController implements Initializable {
                         this.getTableRow().getStyleClass().removeAll("uncontacted", "positive", "negative");
 
                         if (empty) {
-                            setText(null);
+                            setText(item);
                             setGraphic(null);
                         }
                         else {
                             if (isEditing()) {
+                                comboBox.setValue(getItem());
                                 setText(null);
                                 setGraphic(comboBox);
                             }
@@ -261,11 +271,14 @@ public class MainController implements Initializable {
                     private void createComboBox() {
                         comboBox = new ComboBox(stateValues);
                         comboBox.setValue(getItem());
-                        comboBox.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                        comboBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
                             @Override
-                            public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-                                if (!arg2) {
+                            public void handle(KeyEvent key) {
+                                if (key.getCode() == KeyCode.ENTER) {
                                     commitEdit(comboBox.getValue().toString());
+                                }
+                                else if (key.getCode() == KeyCode.ESCAPE) {
+                                    cancelEdit();
                                 }
                             }
                         });
@@ -278,7 +291,6 @@ public class MainController implements Initializable {
             public void handle(TableColumn.CellEditEvent<Company, String> t) {
                 ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setState(t.getNewValue());
             }
-
         });
 
 
