@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import praktik.model.Company;
 
 import java.io.*;
 import java.net.URL;
@@ -32,6 +33,11 @@ public class MainController implements Initializable {
     @FXML private TableColumn<Company, String> tc_phone;
     @FXML private TableColumn<Company, String> tc_mail;
     @FXML private TableColumn<Company, String> tc_website;
+    @FXML private TableColumn<Company, String> tc_street;
+    @FXML private TableColumn<Company, String> tc_city;
+    @FXML private TableColumn<Company, String> tc_province;
+    @FXML private TableColumn<Company, String> tc_zip;
+    @FXML private TableColumn<Company, String> tc_country;
     @FXML private TableColumn<Company, String> tc_state;
     @FXML private Button b_add;
     @FXML private Button b_delete;
@@ -56,13 +62,13 @@ public class MainController implements Initializable {
             File file = fileChooser.showSaveDialog(stage);
 
             if (file != null) {
-                // create and write the json in the file selected
                 FileOutputStream fos = null;
                 try {
                     file.createNewFile();
                     fos = new FileOutputStream(file);
                     final ObjectOutputStream oos = new ObjectOutputStream(fos);
                     data.stream().forEach(company -> {
+                        System.out.println(company); // DEBUG
                         try {
                             oos.writeObject(company);
                         } catch (IOException e) {
@@ -164,42 +170,86 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         table.setTableMenuButtonVisible(true);
 
-        tc_company.setCellValueFactory(new PropertyValueFactory<Company,String>("companyName"));
-        tc_activities.setCellValueFactory(new PropertyValueFactory<Company,String>("activities"));
+        tc_company.setCellValueFactory(new PropertyValueFactory<Company, String>("companyName"));
+        tc_activities.setCellValueFactory(new PropertyValueFactory<Company, String>("activities"));
         tc_phone.setCellValueFactory(new PropertyValueFactory<Company,String>("phone"));
         tc_mail.setCellValueFactory(new PropertyValueFactory<Company,String>("mail"));
         tc_website.setCellValueFactory(new PropertyValueFactory<Company,String>("website"));
+        tc_street.setCellValueFactory(new PropertyValueFactory<Company, String>("street"));
+        tc_city.setCellValueFactory(new PropertyValueFactory<Company, String>("city"));
+        tc_province.setCellValueFactory(new PropertyValueFactory<Company, String>("province"));
+        tc_zip.setCellValueFactory(new PropertyValueFactory<Company, String>("zip"));
+        tc_country.setCellValueFactory(new PropertyValueFactory<Company, String>("country"));
         tc_state.setCellValueFactory(new PropertyValueFactory<Company, String>("state"));
 
         // Setting cells
         tc_company.setCellFactory(TextFieldTableCell.forTableColumn());
         tc_company.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
-            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
-                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setCompanyName(t.getNewValue());
+            @Override
+            public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCompanyName(t.getNewValue());
             }
         });
         tc_activities.setCellFactory(TextFieldTableCell.forTableColumn());
         tc_activities.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
-            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
-                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setActivities(t.getNewValue());
+            @Override
+            public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setActivities(t.getNewValue());
             }
         });
         tc_phone.setCellFactory(TextFieldTableCell.forTableColumn());
         tc_phone.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
-            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
-                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setPhone(t.getNewValue());
+            @Override
+            public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setPhone(t.getNewValue());
             }
         });
         tc_mail.setCellFactory(TextFieldTableCell.forTableColumn());
         tc_mail.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
-            @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
-                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setMail(t.getNewValue());
+            @Override
+            public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setMail(t.getNewValue());
             }
         });
         tc_website.setCellFactory(TextFieldTableCell.forTableColumn());
         tc_website.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setWebsite(t.getNewValue());
+            }
+        });
+        tc_street.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc_street.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setStreet_address(t.getNewValue());
+            }
+        });
+        tc_city.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc_city.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCity(t.getNewValue());
+            }
+        });
+        tc_province.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc_province.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setProvince(t.getNewValue());
+            }
+        });
+        tc_zip.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc_zip.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Company, String> t) {
+                ((Company) t.getTableView().getItems().get(t.getTablePosition().getRow())).setZip_code(t.getNewValue());
+            }
+        });
+        tc_country.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc_country.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Company, String>>() {
             @Override public void handle(TableColumn.CellEditEvent<Company, String> t) {
-                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setWebsite(t.getNewValue());
+                ((Company)t.getTableView().getItems().get(t.getTablePosition().getRow())).setCountry(t.getNewValue());
             }
         });
         //tc_state.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), stateValues));
@@ -295,19 +345,19 @@ public class MainController implements Initializable {
 
 
         // Open a window with a form to enter a new company
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("form_add.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("view/form_add.fxml"));
         try {
             Parent root = loader.load();
             formStage = new Stage();
             formStage.setTitle("Add a company");
-            formStage.setScene(new Scene(root, 600, 330));
+            formStage.setScene(new Scene(root, 600, 500));
         }
         catch(IOException e) {
             e.printStackTrace();
         }
 
         // About
-        FXMLLoader loader2 = new FXMLLoader(getClass().getResource("about.fxml"));
+        FXMLLoader loader2 = new FXMLLoader(getClass().getResource("view/about.fxml"));
         try {
             Parent root = loader2.load();
             about = new Stage();

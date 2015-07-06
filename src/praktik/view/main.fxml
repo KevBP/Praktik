@@ -21,20 +21,25 @@
                 <Button fx:id="b_save" disable="true" mnemonicParsing="false" onAction="#action_save" text="Save" />
                 <Button fx:id="b_load" mnemonicParsing="false" onAction="#action_load" text="Load" />
                 <Button fx:id="b_about" mnemonicParsing="false" onAction="#action_about" text="About" />
-            <Label fx:id="l_file">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </Label>
+                <Label fx:id="l_file">
+                    <padding>
+                        <Insets left="10.0" />
+                    </padding>
+                </Label>
             </items>
         </ToolBar>
         <TableView fx:id="table" editable="true" prefHeight="263.0" prefWidth="597.0" GridPane.rowIndex="1">
             <columns>
-                <TableColumn fx:id="tc_company" prefWidth="140.0" text="Company name" />
-                <TableColumn fx:id="tc_activities" prefWidth="140.0" text="Activities" />
-                <TableColumn fx:id="tc_phone" prefWidth="140.0" text="Phone" />
-                <TableColumn fx:id="tc_mail" prefWidth="140.0" text="Mail" />
-                <TableColumn fx:id="tc_website" prefWidth="140.0" text="Website" />
+                <TableColumn fx:id="tc_company" prefWidth="100.0" text="Company name" />
+                <TableColumn fx:id="tc_activities" prefWidth="100.0" text="Activities" />
+                <TableColumn fx:id="tc_phone" prefWidth="100.0" text="Phone" />
+                <TableColumn fx:id="tc_mail" prefWidth="100.0" text="Mail" />
+                <TableColumn fx:id="tc_website" prefWidth="100.0" text="Website" />
+                <TableColumn fx:id="tc_street" prefWidth="100.0" text="Street address" />
+                <TableColumn fx:id="tc_city" prefWidth="100.0" text="City" />
+                <TableColumn fx:id="tc_province" prefWidth="100.0" text="Province" visible="false" />
+                <TableColumn fx:id="tc_zip" prefWidth="100.0" text="Zip code" visible="false" />
+                <TableColumn fx:id="tc_country" prefWidth="100.0" text="Country" visible="false" />
                 <TableColumn fx:id="tc_state" prefWidth="100.0" text="State" />
             </columns>
         </TableView>
