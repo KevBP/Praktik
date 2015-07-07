@@ -68,7 +68,6 @@ public class MainController implements Initializable {
                     fos = new FileOutputStream(file);
                     final ObjectOutputStream oos = new ObjectOutputStream(fos);
                     data.stream().forEach(company -> {
-                        System.out.println(company); // DEBUG
                         try {
                             oos.writeObject(company);
                         } catch (IOException e) {
